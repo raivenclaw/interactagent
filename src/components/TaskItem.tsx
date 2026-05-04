@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
 
 interface TaskItemProps {
   id: string;
@@ -13,8 +14,12 @@ interface TaskItemProps {
 export function TaskItem({ id, title, xp, completed, available }: TaskItemProps) {
   const content = (
     <div
-      className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-cream text-[0.88rem] font-medium transition-all ${
-        completed ? 'opacity-60' : available ? 'hover:bg-[#F0EFEC] cursor-pointer' : 'opacity-50 cursor-not-allowed'
+      className={`flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-[0.88rem] font-medium transition-all ${
+        completed
+          ? 'bg-muted/50 opacity-60'
+          : available
+          ? 'bg-secondary hover:bg-accent cursor-pointer'
+          : 'bg-muted/30 opacity-50 cursor-not-allowed'
       }`}
     >
       <div
@@ -22,8 +27,8 @@ export function TaskItem({ id, title, xp, completed, available }: TaskItemProps)
           completed
             ? 'bg-emerald-500 border-emerald-500'
             : available
-            ? 'border-deep-red animate-pulse-ring'
-            : 'border-card-border'
+            ? 'border-primary animate-pulse-ring'
+            : 'border-border'
         }`}
       >
         {completed && (
@@ -32,10 +37,22 @@ export function TaskItem({ id, title, xp, completed, available }: TaskItemProps)
           </svg>
         )}
       </div>
-      <span>{title}</span>
-      <span className={`ml-auto text-[0.72rem] font-bold whitespace-nowrap ${completed ? 'text-emerald-500' : 'text-deep-red'}`}>
-        {completed ? '\u2713' : '+'} {xp} XP
-      </span>
+      <span className="leading-tight">{title}</span>
+      <Badge
+        variant={completed ? 'secondary' : 'outline'}
+        className={`ml-auto text-[0.68rem] font-bold whitespace-nowrap ${
+          completed ? 'text-emerald-600' : 'text-primary'
+        }`}
+      >
+        {completed ? (
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="none" className="mr-0.5">
+            <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        ) : (
+          '+'
+        )}
+        {xp} XP
+      </Badge>
     </div>
   );
 

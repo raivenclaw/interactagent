@@ -9,6 +9,9 @@ import { StreakPopup } from '@/components/StreakPopup';
 import { LEVELS } from '@/lib/data';
 import { AppState, StreakInfo } from '@/lib/types';
 import { loadState, saveState } from '@/lib/store';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 export default function TaskPage({ params }: { params: Promise<{ taskId: string }> }) {
   const { taskId } = use(params);
@@ -82,7 +85,7 @@ export default function TaskPage({ params }: { params: Promise<{ taskId: string 
       {xpFly && (
         <div
           key={xpFly.id}
-          className="fixed text-[1.1rem] font-extrabold text-deep-red z-[700] pointer-events-none animate-fly-up"
+          className="fixed text-[1.1rem] font-extrabold text-primary z-[700] pointer-events-none animate-fly-up"
           style={{ left: '50%', bottom: '120px', transform: 'translateX(-50%)' }}
         >
           +{xpFly.xp} XP
@@ -94,19 +97,23 @@ export default function TaskPage({ params }: { params: Promise<{ taskId: string 
 
       {/* Badge unlock overlay */}
       {badgeUnlock && (
-        <div className="fixed inset-0 z-[600] flex items-center justify-center bg-charcoal/60 backdrop-blur-md p-6">
-          <div className="bg-white rounded-[28px] p-12 text-center max-w-[340px] w-full animate-scale-in">
-            <div className="text-[4rem] mb-3 animate-bounce-in">{badgeUnlock.emoji}</div>
-            <div className="text-[0.75rem] font-bold text-emerald-500 uppercase tracking-wider mb-2">Badge Unlocked!</div>
-            <div className="text-[1.4rem] font-extrabold mb-5">{badgeUnlock.name}</div>
-            <button
+        <Dialog open onOpenChange={(open) => { if (!open) setBadgeUnlock(null); }}>
+          <DialogContent showCloseButton={false} className="text-center max-w-[340px] p-12 rounded-2xl">
+            <DialogHeader className="items-center">
+              <div className="text-[4rem] leading-none animate-bounce-in">{badgeUnlock.emoji}</div>
+              <Badge variant="secondary" className="text-emerald-600 text-[0.7rem] font-bold uppercase tracking-wider">
+                Badge Unlocked
+              </Badge>
+              <DialogTitle className="text-[1.4rem] font-extrabold">{badgeUnlock.name}</DialogTitle>
+            </DialogHeader>
+            <Button
               onClick={() => setBadgeUnlock(null)}
-              className="bg-deep-red text-white text-base font-bold py-4 px-12 rounded-[14px] shadow-[0_4px_14px_rgba(139,26,16,0.3)] hover:-translate-y-0.5 active:translate-y-0 transition-all w-full"
+              className="w-full h-14 text-base font-bold rounded-xl bg-primary text-primary-foreground shadow-[0_4px_14px_rgba(139,26,16,0.3)] hover:-translate-y-0.5 hover:bg-primary/90 active:translate-y-0 transition-all"
             >
               Awesome!
-            </button>
-          </div>
-        </div>
+            </Button>
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   );

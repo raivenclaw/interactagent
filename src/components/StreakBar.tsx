@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 interface StreakBarProps {
   streak: number;
@@ -12,7 +13,7 @@ interface StreakBarProps {
 
 export function StreakBar({ streak, xp, avatarLabel = 'D', onAvatarClick, showBackButton }: StreakBarProps) {
   return (
-    <div className="sticky top-0 z-[100] bg-cream border-b border-card-border px-5 py-3 flex items-center justify-between">
+    <div className="sticky top-0 z-[100] bg-background/95 backdrop-blur-sm border-b border-border px-5 py-3 flex items-center justify-between">
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-1 font-bold text-[0.9rem] text-amber-500">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
@@ -20,7 +21,7 @@ export function StreakBar({ streak, xp, avatarLabel = 'D', onAvatarClick, showBa
           </svg>
           Day {streak}
         </div>
-        <div className="flex items-center gap-1 font-bold text-[0.9rem] text-deep-red">
+        <div className="flex items-center gap-1 font-bold text-[0.9rem] text-primary">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
             <path d="M7 0L8.5 4H13L9.5 6.5L11 11L7 8.5L3 11L4.5 6.5L1 4H5.5L7 0Z" />
           </svg>
@@ -28,21 +29,22 @@ export function StreakBar({ streak, xp, avatarLabel = 'D', onAvatarClick, showBa
         </div>
       </div>
       {showBackButton ? (
-        <Link
-          href="/learn"
-          className="w-9 h-9 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-sm hover:scale-105 transition-transform"
-        >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M9 2L4 7L9 12" />
-          </svg>
+        <Link href="/learn">
+          <Button variant="ghost" size="icon" className="rounded-full w-9 h-9 bg-emerald-500 text-white hover:bg-emerald-600 hover:text-white">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M9 2L4 7L9 12" />
+            </svg>
+          </Button>
         </Link>
       ) : (
-        <button
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={onAvatarClick}
-          className="w-9 h-9 rounded-full bg-deep-red text-white flex items-center justify-center font-bold text-sm hover:scale-105 transition-transform cursor-pointer"
+          className="rounded-full w-9 h-9 bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground font-bold text-sm"
         >
           {avatarLabel}
-        </button>
+        </Button>
       )}
     </div>
   );

@@ -3,6 +3,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { PersonaCard } from '@/components/PersonaCard';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { loadState, saveState } from '@/lib/store';
 
 export default function WelcomePage() {
@@ -29,19 +32,19 @@ export default function WelcomePage() {
   };
 
   return (
-    <div className="min-h-dvh flex flex-col items-center justify-center px-6 py-10 text-center">
-      <div className="inline-flex items-center gap-1.5 bg-red-50 text-deep-red text-xs font-bold px-3.5 py-1.5 rounded-full mb-6 uppercase tracking-wider">
+    <div className="min-h-dvh flex flex-col justify-center px-6 py-10 max-w-[440px] mx-auto">
+      <Badge variant="secondary" className="w-fit text-primary text-xs font-bold px-3.5 py-1.5 rounded-full mb-6 uppercase tracking-wider">
         Free Micro-Course
-      </div>
+      </Badge>
 
-      <h1 className="text-[2rem] sm:text-[2.6rem] font-extrabold leading-[1.15] mb-2">
+      <h1 className="text-[2.4rem] sm:text-[3rem] font-extrabold tracking-tighter leading-none mb-2">
         Claude Code<br />for Dummies
       </h1>
-      <p className="text-[1.1rem] text-muted font-medium mb-10">But Actually Useful</p>
+      <p className="text-[1.1rem] text-muted-foreground font-medium mb-10">But Actually Useful</p>
 
-      <p className="text-[0.85rem] font-semibold text-muted uppercase tracking-wider mb-4">Who are you?</p>
+      <p className="text-[0.85rem] font-semibold text-muted-foreground uppercase tracking-wider mb-4">Who are you?</p>
 
-      <div className="flex flex-col gap-3 w-full max-w-[380px] mb-6">
+      <div className="flex flex-col gap-3 w-full mb-6">
         <PersonaCard
           icon={<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>}
           label="D2C Ecom Founder"
@@ -60,16 +63,20 @@ export default function WelcomePage() {
         />
       </div>
 
-      <div className="max-w-[380px] bg-emerald-50 rounded-[14px] px-5 py-4 text-[0.88rem] leading-relaxed text-emerald-800 text-left mb-8 animate-fade-up">
-        Perfect. We&apos;ll teach you to automate your store, research competitors, write product copy, and build your AI toolkit — one bite at a time.
-      </div>
+      <Card className="bg-emerald-50/50 border-emerald-200/60 mb-8 animate-fade-up">
+        <CardContent>
+          <p className="text-[0.88rem] leading-relaxed text-emerald-800">
+            Perfect. We&apos;ll teach you to automate your store, research competitors, write product copy, and build your AI toolkit — one bite at a time.
+          </p>
+        </CardContent>
+      </Card>
 
-      <button
+      <Button
         onClick={handleStart}
-        className="bg-deep-red text-white text-base font-bold py-4 px-12 rounded-[14px] shadow-[0_4px_14px_rgba(139,26,16,0.3)] hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(139,26,16,0.35)] active:translate-y-0 transition-all w-full max-w-[380px]"
+        className="w-full h-14 text-base font-bold rounded-xl bg-primary text-primary-foreground shadow-[0_4px_14px_rgba(139,26,16,0.3)] hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(139,26,16,0.35)] hover:bg-primary/90 active:translate-y-0 transition-all"
       >
         Start Learning
-      </button>
+      </Button>
     </div>
   );
 }
