@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code Bookclub — Your Toolkit Cheat Sheet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --mc-cream: #EAE6DF;
+            --mc-charcoal: #2E2A26;
+            --mc-red: #8B1A10;
+            --mc-white: #FFFFFF;
+            --mc-border: rgba(46, 42, 38, 0.25);
+            --mc-cream-dark: #DDD8D0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--mc-charcoal);
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .slide-deck {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        @media (min-width: 769px) {
+            .slide-deck {
+                max-width: calc(100vh * 16 / 9);
+                max-height: calc(100vw * 9 / 16);
+                margin: auto;
+                position: absolute;
+                inset: 0;
+            }
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 80px 100px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease;
+            overflow: hidden;
+        }
+
+        .slide.active { opacity: 1; visibility: visible; }
+
+        .slide--cream { background: var(--mc-cream); color: var(--mc-charcoal); }
+        .slide--charcoal { background: var(--mc-charcoal); color: var(--mc-cream); }
+        .slide--red { background: var(--mc-red); color: var(--mc-white); }
+        .slide--center { align-items: center; text-align: center; }
+
+        .slide-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            opacity: 0.5;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(56px, 8vw, 120px);
+            line-height: 0.9;
+            letter-spacing: -0.01em;
+            text-transform: uppercase;
+            margin-bottom: 32px;
+        }
+
+        h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(40px, 5.5vw, 80px);
+            line-height: 0.95;
+            letter-spacing: -0.01em;
+            text-transform: uppercase;
+            margin-bottom: 28px;
+        }
+
+        h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(28px, 3.5vw, 48px);
+            line-height: 1;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(14px, 1.6vw, 20px);
+            line-height: 1.6;
+            font-weight: 300;
+            max-width: 700px;
+        }
+
+        .p-large {
+            font-size: clamp(16px, 2vw, 26px);
+            line-height: 1.5;
+            font-weight: 400;
+            max-width: 800px;
+        }
+
+        .p-small {
+            font-size: clamp(12px, 1.2vw, 16px);
+            opacity: 0.6;
+        }
+
+        .highlight {
+            background: var(--mc-red);
+            color: var(--mc-white);
+            padding: 2px 10px;
+            display: inline;
+        }
+
+        .slide--red .highlight {
+            background: var(--mc-white);
+            color: var(--mc-red);
+        }
+
+        .divider {
+            width: 60px;
+            height: 3px;
+            background: var(--mc-red);
+            margin: 24px 0;
+        }
+
+        .slide--red .divider { background: var(--mc-white); }
+        .slide--charcoal .divider { background: #D4453A; }
+
+        /* Tool card — the main component for this deck */
+        .tool-card {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 40px;
+            width: 100%;
+            max-width: 1000px;
+            align-items: start;
+            margin-top: 16px;
+        }
+
+        .tool-card-left {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .tool-filename {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(13px, 1.3vw, 17px);
+            font-weight: 600;
+            padding: 8px 14px;
+            background: var(--mc-red);
+            color: var(--mc-white);
+            display: inline-block;
+            letter-spacing: 0.02em;
+        }
+
+        .slide--charcoal .tool-filename {
+            background: #D4453A;
+        }
+
+        .slide--red .tool-filename {
+            background: var(--mc-white);
+            color: var(--mc-red);
+        }
+
+        .tool-module {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            opacity: 0.4;
+        }
+
+        .tool-card-right h3 {
+            font-size: clamp(24px, 3vw, 40px);
+            margin-bottom: 12px;
+        }
+
+        .tool-card-right p {
+            font-size: clamp(14px, 1.4vw, 18px);
+            line-height: 1.6;
+            max-width: 600px;
+        }
+
+        .tool-analogy {
+            font-style: italic;
+            opacity: 0.7;
+            margin-top: 12px;
+            font-size: clamp(13px, 1.3vw, 17px) !important;
+            padding-left: 16px;
+            border-left: 2px solid var(--mc-red);
+        }
+
+        .slide--charcoal .tool-analogy { border-color: #D4453A; }
+        .slide--red .tool-analogy { border-color: var(--mc-white); opacity: 0.6; }
+
+        /* Multi-tool grid */
+        .tool-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            width: 100%;
+            max-width: 1000px;
+            margin-top: 16px;
+        }
+
+        .tool-grid-item {
+            padding: 24px;
+            border: 1px solid var(--mc-border);
+        }
+
+        .tool-grid-item h3 {
+            font-size: clamp(14px, 1.4vw, 18px);
+            margin-bottom: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .tool-grid-item .fname {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--mc-red);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .slide--charcoal .tool-grid-item .fname { color: #D4453A; }
+
+        .tool-grid-item p {
+            font-size: clamp(12px, 1.1vw, 15px);
+            line-height: 1.5;
+            opacity: 0.7;
+        }
+
+        /* Feature grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+            width: 100%;
+            max-width: 1000px;
+            margin-top: 20px;
+        }
+
+        .feature-card {
+            padding: 28px;
+            border: 1px solid var(--mc-border);
+        }
+
+        .feature-card h3 {
+            font-size: clamp(14px, 1.4vw, 18px);
+            margin-bottom: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .feature-card p {
+            font-size: clamp(12px, 1.1vw, 15px);
+            line-height: 1.5;
+            opacity: 0.7;
+        }
+
+        .slide-footer {
+            position: absolute;
+            bottom: 32px;
+            left: 100px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            opacity: 0.3;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0; left: 0;
+            height: 3px;
+            background: var(--mc-red);
+            transition: width 0.4s ease;
+            z-index: 1000;
+        }
+
+        .nav-controls {
+            position: fixed;
+            bottom: 28px;
+            right: 40px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid var(--mc-border);
+            color: var(--mc-cream);
+            width: 36px; height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: var(--mc-red);
+            border-color: var(--mc-red);
+            color: var(--mc-white);
+        }
+
+        .slide-counter {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--mc-cream);
+            font-size: 12px;
+            opacity: 0.4;
+            letter-spacing: 0.05em;
+        }
+
+        @media (max-width: 768px) {
+            .slide { padding: 40px 32px; }
+            .tool-card { grid-template-columns: 1fr; gap: 16px; }
+            .tool-grid { grid-template-columns: 1fr; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .slide-footer { left: 32px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="slide-deck">
+
+    <!-- SLIDE 1: Title -->
+    <div class="slide slide--charcoal slide--center active">
+        <p class="slide-label">Maison Cler — Claude Code Bookclub</p>
+        <h1>YOUR TOOLKIT<br>CHEAT SHEET</h1>
+        <div class="divider" style="margin: 12px auto 28px;"></div>
+        <p class="p-large" style="text-align:center;">28 files. Copy-paste ready.<br>Every tool explained in plain language.</p>
+        <span class="slide-footer">Maison Cler</span>
+    </div>
+
+    <!-- SLIDE 2: The Big Picture -->
+    <div class="slide slide--red slide--center">
+        <p class="slide-label">Think of it this way</p>
+        <h2>You're not learning<br>to code. You're<br>setting up a kitchen.</h2>
+        <div class="divider" style="margin:16px auto 28px;"></div>
+        <p style="text-align:center; opacity:0.8;">CLAUDE.md is your cookbook.<br>Skills are your recipes.<br>Hooks are your smoke detectors.<br>MCP servers are your appliances.<br>Agents are your sous chefs.</p>
+        <span class="slide-footer" style="color:var(--mc-white);">Maison Cler</span>
+    </div>
+
+    <!-- SLIDE 3: CLAUDE.md -->
+    <div class="slide slide--cream">
+        <div class="tool-card">
+            <div class="tool-card-left">
+                <span class="tool-filename">build-with-focus.md</span>
+                <span class="tool-module">Module 01 — Foundations</span>
+            </div>
+            <div class="tool-card-right">
+                <h3>Your starter CLAUDE.md</h3>
+                <p>Drop this into any project folder. It tells Claude who you are, what stack to use, and — most importantly — what NOT to build. Prevents scope creep, keeps builds focused, stops Claude from building login screens before your app works.</p>
+                <p class="tool-analogy">Think of it as the employee handbook you give a new hire on day one. "Here's how we work. Here's what we never do."</p>
+            </div>
+        </div>
+        <span class="slide-footer">Maison Cler</span>
+    </div>
+
+    <!-- SLIDE 4: Company Context Files -->
+    <div class="slide slide--charcoal">
+        <p class="slide-label">Module 01 — Foundations</p>
+        <h2>Company<br>context files.</h2>
+        <div class="divider"></div>
+        <div class="tool-grid">
+            <div class="tool-grid-item" style="border-color:rgba(234,230,223,0.15);">
+                <span class="fname">COMPANY.md</span>
+                <h3 style="color:var(--mc-cream);">Your ID card</h3>
+                <p style="color:var(--mc-cream);">What you do, your numbers, your team. Claude reads this first, every time.</p>
+            </div>
+            <div class="tool-grid-item" style="border-color:rgba(234,230,223,0.15);">
+                <span class="fname">BRAND-VOICE.md</span>
+                <h3 style="color:var(--mc-cream);">Your accent</h3>
+                <p style="color:var(--mc-cream);">How you sound vs. how you don't. Good examples and bad examples so Claude nails your tone.</p>
+            </div>
+            <div class="tool-grid-item" style="border-color:rgba(234,230,223,0.15);">
+                <span class="fname">PERSONAS.md</span>
+                <h3 style="color:var(--mc-cream);">Your customers' dating profiles</h3>
+                <p style="color:var(--mc-cream);">Age, pain points, budget, what they say. So Claude writes for real people, not generic "users."</p>
+            </div>
+            <div class="tool-grid-item" style="border-color:rgba(234,230,223,0.15);">
+                <span class="fname">COMPETITIVE.md</span>
+                <h3 style="color:var(--mc-cream);">Your scouting report</h3>
+                <p style="color:var(--mc-cream);">Who you're up against, where you win, where you lose. Claude uses this to position you correctly.</p>
+            </div>
+        </div>
+        <p class="p-small" style="margin-top:20px;">Fill these in once. Claude reads them forever. 10 minutes of setup = hours saved.</p>
+        <span class="slide-footer">Maison Cler</span>
+    </div>
+
+    <!-- SLIDE 5: SPEC.md -->
+    <div class="slide slide--cream">
+        <div class="tool-card">
+            <div class="tool-card-left">
+                <span class="tool-filename">SPEC.md</span>
+                <span class="tool-module">Module 02 — Product Thinking</span>
+            </div>
+            <div class="tool-card-right">
+                <h3>Your blueprint</h3>
+                <p>Before building anything, fill this in: what it does, who it's for, what it must NOT do. Claude won't write code until you approve the spec. Prevents the boat-with-wings problem.</p>
+                <p class="tool-analogy">Like a floor plan before building a house. You wouldn't let a contractor start pouring concrete before you've agreed on where the kitchen goes.</p>
+            </div>
+        </div>
+        <span class="slide-footer">Maison Cler</span>
+    </div>
+
+    <!-- SLIDE 6: Landing Page Spec -->
+    <div class="slide slide--charcoal">
+        <div class="tool-card">
+            <div class="tool-card-left">
+                <span class="tool-filename">landing-page-spec.md</span>
+                <span class="tool-module">Module 03 — Landing Pages</span>
+            </div>
+            <div class="tool-card-right">
+                <h3>Your page brief</h3>
+                <p>Fill in your product, audience, benefits, and CTA. Pick a page type (product launch, lead magnet, waitlist, event, coming soon). Hand it to Claude. Get a conversion-focused page in minutes.</p>
+                <p class="tool-analogy">Like a creative brief you'd hand to a freelance designer — except this one actually gets followed to the letter.</p>
+            </div>
+        </div>
+        <span class="slide-footer">Maison Cler</span>
+    </div>
+
+    <!-- SLIDE 7: Competitor Report -->
+    <div class="slide slide--cream">
+        <div class="tool-card">
+            <div class="tool-card-left">
+                <span class="tool-filename">competitor-report-template.md</span>
+                <span class="tool-module">Module 04 — Competitor Research</span>
+            </div>
+            <div class="tool-card-right">
+                <h3>Your intelligence report</h3>
+                <p>Structured format: company overview, pricing table, strengths, weaknesses, customer sentiment, opportunities, threats, and 3 actionable recommendations. Same format every time so you can compare competitors side by side.</p>
+                <p class="tool-analogy">Like a dossier from a spy movie — except it's about your competitor's Instagram strategy, not nuclear codes.</p>
+            </div>
+        </div>
+        <span class="slide-footer">Maison Cler</span>
+    </div>
+
+    <!-- SLIDE 8: Lead Gen Files -->
+    <div class="slide slide--charcoal">
+        <p class="slide-label">Module 07 — Lead Generation</p>
+        <h2>Sales toolkit.</h2>
+        <div class="divider"></div>
+        <div class="tool-grid">
+            <div class="tool-grid-item" style="border-color:rgba(234,230,223,0.15);">
+                <span class="fname">icp-template.md</span>
+                <h3 style="color:var(--mc-cream);">Your "perfect customer" profile</h3>
+                <p style="color:var(--mc-cream);">Company size, champion, decision maker, trigger events, pain points, and disqualifiers. Plus a hot/warm/cold temperature guide so you never waste time on dead leads.</p>
+                <p class="tool-analogy" style="color:var(--mc-cream);">Like a dating profile — but for the customer you actually want to attract.</p>
+            </div>
+            <div class="tool-grid-item" style="border-color:rgba(234,230,223,0.15);">
+                <span class="fname">cold-outreach-sequence.md</span>
+                <h3 style="color:var(--mc-cream);">Your 5-email playbook</h3>
+                <p style="color:var(--mc-cream);">Opening, value add, social proof, breakup tease, goodbye. Each email has structure, length rules, and the psychology behind it. Claude personalizes each one for your prospect.</p>
+                <p class="tool-analogy" style="color:var(--mc-cream);">Like a conversation script for a first date — except the goal is a demo, not dinner.</p>
+            </div>
+        </div>
+        <span class="slide-footer">Maison Cler</span>
+    </div>
+
+    <!-- SLIDE 9: Brand Voice Config -->
+    <div class="slide slide--cream">
+        <div class="tool-card">
+            <div class="tool-card-left">
+                <span class="tool-filename">brand-voice-config.md</span>
+                <span class="tool-module">Module 08 — Content Generator</span>
+            </div>
+            <div class="tool-card-right">
+                <h3>Your brand's DNA</h3>
+                <p>Paste this into your CLAUDE.md. Defines your tone, words you use, words you ban, content length guidelines, and example copy. Every piece of content Claude writes will sound like you — not like a robot pretending to be a marketer.</p>
+                <p class="tool-analogy">Like teaching someone your accent. You don't just say "sound British." You say "say 'brilliant' instead of 'great,' never say 'awesome,' and always be slightly understated."</p>
+            </div>
+        </div>
+        <span class="slide-footer">Maison Cler</span>
+    </div>
+
+    <!-- SLIDE 10: MCP Reference -->
+    <div class="slide slide--red">
+        <div class="tool-card">
+            <div class="tool-card-left">
+                <span class="tool-filename">mcp-quick-reference.md</span>
+                <span class="tool-module">Module 09 — MCP Servers</span>
+            </div>
+            <div class="tool-card-right">
+                <h3>Your tool belt</h3>
+                <p>Every MCP server you'd want as a founder: Shopify, Stripe, Playwright, Brave Search, Notion, HubSpot, Figma. Each with a one-line install command. Copy, paste, connected.</p>
+                <p class="tool-analogy" style="border-color:var(--mc-white);">Like plugging appliances into wall sockets. Once Shopify is plugged in, you can say "how many orders did we get today?" and Claude just knows.</p>
+            </div>
+        </div>
+        <span class="slide-footer" style="color:var(--mc-white);">Maison Cler</span>
+    </div>
+
+    <!-- SLIDE 11: Deploy Files -->
+    <div class="slide slide--charcoal">
+        <p class="slide-label">Module 10 — Database, Auth & Deploy</p>
+        <h2>Ship it safely.</h2>
+        <div class="divider"></div>
+        <div class="feature-grid">
+            <div class="feature-card" style="border-color:rgba(234,230,223,0.15);">
+                <h3 style="color:#D4453A;">env-example</h3>
+                <p style="color:var(--mc-cream);">Template for your secret keys. Supabase, Stripe, Google — all pre-formatted. Copy as .env, fill in your keys.</p>
+                <p class="tool-analogy" style="color:var(--mc-cream); border-color:#D4453A;">Your key ring. Keeps all your passwords in one safe place — never in the code.</p>
+            </div>
+            <div class="feature-card" style="border-color:rgba(234,230,223,0.15);">
+                <h3 style="color:#D4453A;">deploy-checklist.md</h3>
+                <p style="color:var(--mc-cream);">12 items to check before going live. Environment vars, auth, mobile, meta tags, security. No missed steps.</p>
+                <p class="tool-analogy" style="color:var(--mc-cream); border-color:#D4453A;">The pilot's pre-flight checklist. Nobody skips it, no matter how many times they've flown.</p>
+            </div>
+            <div class="feature-card" style="border-color:rgba(234,230,223,0.15);">
+                <h3 style="color:#D4453A;">claude-md-database-addition.md</h3>
+                <p style="color:var(--mc-cream);">Paste into CLAUDE.md when your project has a database. Tables, auth rules, deploy settings — Claude remembers it all.</p>
+                <p class="tool-analogy" style="color:var(--mc-cream); border-color:#D4453A;">An extension to the employee handbook: "Now that we have a warehouse, here are the warehouse rules."</p>
+            </div>
+        </div>
+        <span class="slide-footer">Maison Cler</span>
+    </div>
+
+    <!-- SLIDE 12: Hooks -->
+    <div class="slide slide--cream">
+        <p class="slide-label">Module 11 — Hooks, Safety & Code Review</p>
+        <h2>Your smoke<br>detectors.</h2>
+        <div class="divider"></div>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3 style="color:var(--mc-red);">git-safety.sh</h3>
+                <p>Blocks force pushes, hard resets, and force branch deletes. The commands that can permanently destroy your work.</p>
+                <p class="tool-analogy">The childproof lock on the medicine cabinet. You can still open it — just not accidentally.</p>
+            </div>
+            <div class="feature-card">
+                <h3 style="color:var(--mc-red);">commit-quality.sh</h3>
+                <p>Scans every commit for leaked API keys, debug statements, passwords in code. Catches what you can't read.</p>
+                <p class="tool-analogy">The spell-checker for secrets. It reads your code so you don't have to — and blocks anything embarrassing.</p>
+            </div>
+            <div class="feature-card">
+                <h3 style="color:var(--mc-red);">cost-tracker.sh</h3>
+                <p>Logs every Claude session to a CSV. See what you're spending, find expensive sessions, set budgets.</p>
+                <p class="tool-analogy">Your credit card statement for AI. No surprise bills at the end of the month.</p>
+            </div>
+        </div>
+        <p class="p-small" style="margin-top:20px;">Plus: settings.json (wires them up) and code-review-checklist.md (5-point review for anything Claude builds).</p>
+        <span class="slide-footer">Maison Cler</span>
+    </div>
+
+    <!-- SLIDE 13: Skills -->
+    <div class="slide slide--charcoal">
+        <p class="slide-label">Module 12 — Custom Skills</p>
+        <h2>Your recipes.</h2>
+        <div class="divider"></div>
+        <div class="tool-grid">
+            <div class="tool-grid-item" style="border-color:rgba(234,230,223,0.15);">
+                <span class="fname">landing-page/SKILL.md</span>
+                <h3 style="color:var(--mc-cream);">Landing Page Builder</h3>
+                <p style="color:var(--mc-cream);">Invoke once, get a conversion-focused page with hero, social proof, benefits, FAQ, CTA. Same structure, same quality, every time.</p>
+            </div>
+            <div class="tool-grid-item" style="border-color:rgba(234,230,223,0.15);">
+                <span class="fname">competitor-research/SKILL.md</span>
+                <h3 style="color:var(--mc-cream);">Competitor Researcher</h3>
+                <p style="color:var(--mc-cream);">Point it at a competitor. Get back: pricing, positioning, strengths, weaknesses, customer sentiment, 3 recommendations.</p>
+            </div>
+            <div class="tool-grid-item" style="border-color:rgba(234,230,223,0.15);">
+                <span class="fname">brand-check/SKILL.md</span>
+                <h3 style="color:var(--mc-cream);">Brand Police</h3>
+                <p style="color:var(--mc-cream);">Run this after any build. Checks colors, fonts, tone, layout against your brand guidelines. Fixes what's off. Before/after report.</p>
+            </div>
+            <div class="tool-grid-item" style="border-color:rgba(234,230,223,0.15);">
+                <span class="fname">product-description/SKILL.md</span>
+                <h3 style="color:var(--mc-cream);">Product Copywriter</h3>
+                <p style="color:var(--mc-cream);">Give it product specs. Get 3 variants (short, story, feature-focused) plus SEO metadata. In your brand voice. Ready for Shopify.</p>
+            </div>
+        </div>
+        <p class="p-small" style="margin-top:20px;">Skills are just markdown files. Explain your workflow once. Claude follows the recipe forever.</p>
+        <span class="slide-footer">Maison Cler</span>
+    </div>
+
+    <!-- SLIDE 14: Skills Analogy -->
+    <div class="slide slide--red slide--center">
+        <p class="slide-label">The recipe analogy</p>
+        <h2>Without a skill:<br>"Make me pasta."</h2>
+        <div class="divider" style="margin:16px auto 24px;"></div>
+        <p style="text-align:center; opacity:0.8;">You get a different dish every time.<br>Sometimes great. Sometimes weird.<br>You spend 5 minutes re-explaining al dente.</p>
+        <p style="text-align:center; margin-top:32px; font-weight:500;">With a skill:<br>"Make me the cacio e pepe<br>from page 47."</p>
+        <p style="text-align:center; margin-top:16px; opacity:0.7;">Same result. Every. Single. Time.</p>
+        <span class="slide-footer" style="color:var(--mc-white);">Maison Cler</span>
+    </div>
+
+    <!-- SLIDE 15: Cron Reference -->
+    <div class="slide slide--cream">
+        <div class="tool-card">
+            <div class="tool-card-left">
+                <span class="tool-filename">cron-reference.md</span>
+                <span class="tool-module">Module 13 — Agents Level 1</span>
+            </div>
+            <div class="tool-card-right">
+                <h3>Your alarm clock</h3>
+                <p>Every common schedule pre-written: "every morning at 7," "every Monday at 9," "every hour," "first of the month." Plus agent ideas for each schedule — what to automate daily, weekly, hourly.</p>
+                <p class="tool-analogy">Like the alarm app on your phone — but instead of waking you up, it wakes up Claude to check your orders, scan competitors, or send you a report.</p>
+            </div>
+        </div>
+        <span class="slide-footer">Maison Cler</span>
+    </div>
+
+    <!-- SLIDE 16: OS Template -->
+    <div class="slide slide--charcoal">
+        <p class="slide-label">Module 20 — The Operating System</p>
+        <h2>Your control panel.</h2>
+        <div class="divider"></div>
+        <div class="tool-grid">
+            <div class="tool-grid-item" style="border-color:rgba(234,230,223,0.15);">
+                <span class="fname">operating-system-template.md</span>
+                <h3 style="color:var(--mc-cream);">Your full system map</h3>
+                <p style="color:var(--mc-cream);">Document everything in one place: your CLAUDE.md rules, skills, hooks, MCP servers, agents, workflows, costs, and lessons learned. Print it. Update it weekly. This IS your operating system.</p>
+                <p class="tool-analogy" style="color:var(--mc-cream); border-color:#D4453A;">The dashboard of your car. Every gauge, every indicator, one glance and you know the state of everything.</p>
+            </div>
+            <div class="tool-grid-item" style="border-color:rgba(234,230,223,0.15);">
+                <span class="fname">lessons.md</span>
+                <h3 style="color:var(--mc-cream);">Your self-improving system</h3>
+                <p style="color:var(--mc-cream);">Every time Claude makes a mistake, add it here. Claude reads this file every session. It literally stops making the same mistake twice. After a month, it feels like a custom-trained AI.</p>
+                <p class="tool-analogy" style="color:var(--mc-cream); border-color:#D4453A;">A diary of "things I learned the hard way." Except your AI reads it every morning and never forgets a single entry.</p>
+            </div>
+        </div>
+        <span class="slide-footer">Maison Cler</span>
+    </div>
+
+    <!-- SLIDE 17: The Full Stack -->
+    <div class="slide slide--cream">
+        <p class="slide-label">Everything together</p>
+        <h2>The full toolkit.</h2>
+        <div class="divider"></div>
+        <div class="feature-grid" style="grid-template-columns: repeat(4, 1fr); gap: 16px;">
+            <div class="feature-card" style="padding:18px;">
+                <h3 style="color:var(--mc-red); font-size:12px;">Brain</h3>
+                <p style="font-size:12px;">CLAUDE.md<br>Company context<br>Brand voice</p>
+            </div>
+            <div class="feature-card" style="padding:18px;">
+                <h3 style="color:var(--mc-red); font-size:12px;">Plans</h3>
+                <p style="font-size:12px;">SPEC.md<br>Landing page spec<br>ICP template</p>
+            </div>
+            <div class="feature-card" style="padding:18px;">
+                <h3 style="color:var(--mc-red); font-size:12px;">Recipes</h3>
+                <p style="font-size:12px;">4 skills<br>Outreach sequence<br>Competitor report</p>
+            </div>
+            <div class="feature-card" style="padding:18px;">
+                <h3 style="color:var(--mc-red); font-size:12px;">Safety</h3>
+                <p style="font-size:12px;">3 hooks<br>Deploy checklist<br>Code review</p>
+            </div>
+        </div>
+        <div class="feature-grid" style="grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top:16px;">
+            <div class="feature-card" style="padding:18px;">
+                <h3 style="color:var(--mc-red); font-size:12px;">Connections</h3>
+                <p style="font-size:12px;">MCP reference<br>7 servers<br>One-line installs</p>
+            </div>
+            <div class="feature-card" style="padding:18px;">
+                <h3 style="color:var(--mc-red); font-size:12px;">Deploy</h3>
+                <p style="font-size:12px;">.env template<br>DB rules<br>Vercel checklist</p>
+            </div>
+            <div class="feature-card" style="padding:18px;">
+                <h3 style="color:var(--mc-red); font-size:12px;">Automate</h3>
+                <p style="font-size:12px;">Cron reference<br>Agent schedules<br>Daily/weekly/monthly</p>
+            </div>
+            <div class="feature-card" style="padding:18px;">
+                <h3 style="color:var(--mc-red); font-size:12px;">System</h3>
+                <p style="font-size:12px;">OS template<br>Lessons.md<br>Full system map</p>
+            </div>
+        </div>
+        <p class="p-small" style="margin-top:20px;">28 files. All copy-paste ready. All yours to keep.</p>
+        <span class="slide-footer">Maison Cler</span>
+    </div>
+
+    <!-- SLIDE 18: Closing -->
+    <div class="slide slide--red slide--center">
+        <p class="slide-label">The bottom line</p>
+        <h1 style="font-size:clamp(36px,5vw,72px);">You don't memorize<br>tools. You install<br>them and forget.</h1>
+        <div class="divider" style="margin:20px auto 28px;"></div>
+        <p style="text-align:center; opacity:0.8;">Set it up once. It works forever.<br>That's the whole point.</p>
+        <p class="p-small" style="margin-top:40px; text-align:center;">maisoncler.com</p>
+        <span class="slide-footer" style="color:var(--mc-white);">Maison Cler</span>
+    </div>
+
+</div>
+
+<!-- Navigation -->
+<div class="nav-controls">
+    <button class="nav-btn" onclick="prevSlide()">&larr;</button>
+    <span class="slide-counter"><span id="current">1</span>&thinsp;/&thinsp;<span id="total">18</span></span>
+    <button class="nav-btn" onclick="nextSlide()">&rarr;</button>
+</div>
+
+<script>
+    let current = 1;
+    const slides = document.querySelectorAll('.slide');
+    const total = slides.length;
+    document.getElementById('total').textContent = total;
+
+    function showSlide(n) {
+        if (n < 1) n = 1;
+        if (n > total) n = total;
+        current = n;
+        slides.forEach((s, i) => s.classList.toggle('active', i === n - 1));
+        document.getElementById('current').textContent = n;
+        document.getElementById('progressBar').style.width = (n / total * 100) + '%';
+
+        const activeSlide = slides[n - 1];
+        const navBtns = document.querySelectorAll('.nav-btn');
+        const counter = document.querySelector('.slide-counter');
+        if (activeSlide.classList.contains('slide--cream')) {
+            navBtns.forEach(b => { b.style.borderColor = 'var(--mc-border)'; b.style.color = 'var(--mc-charcoal)'; });
+            counter.style.color = 'var(--mc-charcoal)';
+        } else if (activeSlide.classList.contains('slide--red')) {
+            navBtns.forEach(b => { b.style.borderColor = 'rgba(255,255,255,0.3)'; b.style.color = 'var(--mc-white)'; });
+            counter.style.color = 'var(--mc-white)';
+        } else {
+            navBtns.forEach(b => { b.style.borderColor = 'var(--mc-border)'; b.style.color = 'var(--mc-cream)'; });
+            counter.style.color = 'var(--mc-cream)';
+        }
+    }
+
+    function nextSlide() { showSlide(current + 1); }
+    function prevSlide() { showSlide(current - 1); }
+
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+    });
+
+    let touchStartX = 0;
+    document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+    document.addEventListener('touchend', e => {
+        const diff = touchStartX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) { diff > 0 ? nextSlide() : prevSlide(); }
+    });
+
+    showSlide(1);
+</script>
+
+</body>
+</html>
