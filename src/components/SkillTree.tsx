@@ -11,10 +11,7 @@ interface SkillTreeProps {
 
 export function SkillTree({ state, onToggleLevel }: SkillTreeProps) {
   return (
-    <div className="relative pl-7">
-      {/* Vertical line */}
-      <div className="absolute left-[15px] top-[30px] bottom-[30px] w-[3px] rounded-sm bg-gradient-to-b from-emerald-500 to-card-border" />
-
+    <div>
       {LEVELS.map((level, li) => {
         const totalTasks = level.tasks.length;
         const done = level.tasks.filter((t) => state.completedTasks.includes(t.id)).length;

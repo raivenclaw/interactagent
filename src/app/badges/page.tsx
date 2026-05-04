@@ -26,8 +26,8 @@ export default function BadgesPage() {
     <div className="min-h-dvh">
       <StreakBar streak={state.streak} xp={state.xp} showBackButton />
       <div className="p-5 max-w-[520px] mx-auto">
-        <h2 className="text-[1.3rem] font-extrabold mb-1">Your Badges</h2>
-        <p className="text-[0.85rem] text-muted mb-2">Complete levels to unlock badges</p>
+        <h2 className="text-lg font-semibold mb-1 text-foreground">Your Badges</h2>
+        <p className="text-sm text-muted-foreground mb-2">Complete levels to unlock badges</p>
         <BadgeGrid earnedBadges={state.earnedBadges} />
       </div>
     </div>

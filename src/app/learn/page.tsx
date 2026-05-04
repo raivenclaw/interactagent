@@ -50,8 +50,8 @@ export default function LearnDashboard() {
         onAvatarClick={() => router.push('/badges')}
       />
       <div className="p-5 max-w-[520px] mx-auto">
-        <p className="text-[1.3rem] font-bold mb-1">{greeting}</p>
-        <p className="text-[0.88rem] text-muted mb-7">Complete tasks to earn XP and unlock badges.</p>
+        <p className="text-lg font-semibold mb-1 text-foreground">{greeting}</p>
+        <p className="text-sm text-muted-foreground mb-8">Complete tasks to earn XP and unlock badges.</p>
         <SkillTree state={state} onToggleLevel={handleToggleLevel} />
       </div>
       <StreakPopup info={streakInfo} onClose={() => setStreakInfo(null)} />

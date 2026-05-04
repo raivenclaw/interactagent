@@ -12,16 +12,18 @@ export function CodeBlock({ code }: { code: string }) {
   };
 
   return (
-    <div className="relative bg-charcoal rounded-xl p-4 my-2.5 overflow-x-auto">
+    <div className="relative bg-[#0A0A0A] rounded-md p-4 my-2.5 overflow-x-auto">
       <button
         onClick={handleCopy}
-        className={`absolute top-2.5 right-2.5 text-white text-[0.7rem] font-bold px-3 py-1 rounded-lg transition-all ${
-          copied ? 'bg-emerald-500' : 'bg-deep-red hover:opacity-90'
+        className={`absolute top-3 right-3 text-xs font-medium px-2.5 py-1 rounded-md border transition-colors ${
+          copied
+            ? 'border-green-500/40 text-green-400'
+            : 'border-white/10 text-white/60 hover:text-white/90 hover:border-white/20'
         }`}
       >
-        {copied ? 'Copied!' : 'Copy'}
+        {copied ? 'Copied' : 'Copy'}
       </button>
-      <pre className="text-cream text-[0.82rem] leading-relaxed whitespace-pre-wrap break-words font-mono">
+      <pre className="text-[#E5E5E5] text-[0.82rem] leading-relaxed whitespace-pre-wrap break-words font-mono">
         <code>{code}</code>
       </pre>
     </div>

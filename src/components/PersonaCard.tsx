@@ -1,8 +1,5 @@
 'use client';
 
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-
 interface PersonaCardProps {
   icon: React.ReactNode;
   label: string;
@@ -13,23 +10,23 @@ interface PersonaCardProps {
 
 export function PersonaCard({ icon, label, selected, disabled, onClick }: PersonaCardProps) {
   return (
-    <Card
+    <div
       onClick={disabled ? undefined : onClick}
-      className={`flex-row items-center gap-3.5 px-5 py-4 border-2 transition-all text-[0.95rem] font-semibold ${
+      className={`flex items-center gap-3.5 px-5 py-4 border rounded-md transition-colors text-sm font-medium ${
         selected
-          ? 'border-primary bg-primary/5 shadow-[0_0_0_3px_rgba(139,26,16,0.12)] cursor-pointer'
+          ? 'border-primary text-foreground'
           : disabled
-          ? 'opacity-45 cursor-not-allowed'
-          : 'hover:border-primary/40 cursor-pointer'
+          ? 'border-border opacity-40 cursor-not-allowed'
+          : 'border-border hover:border-primary cursor-pointer'
       }`}
     >
-      <span className="text-2xl flex-shrink-0">{icon}</span>
+      <span className="flex-shrink-0 text-muted-foreground">{icon}</span>
       <span className="leading-tight">{label}</span>
       {disabled && (
-        <Badge variant="secondary" className="text-[0.65rem] font-bold ml-auto uppercase tracking-wider">
+        <span className="ml-auto text-[0.65rem] font-medium text-muted-foreground uppercase tracking-widest">
           Soon
-        </Badge>
+        </span>
       )}
-    </Card>
+    </div>
   );
 }

@@ -98,19 +98,19 @@ export default function TaskPage({ params }: { params: Promise<{ taskId: string 
       {/* Badge unlock overlay */}
       {badgeUnlock && (
         <Dialog open onOpenChange={(open) => { if (!open) setBadgeUnlock(null); }}>
-          <DialogContent showCloseButton={false} className="text-center max-w-[340px] p-12 rounded-2xl">
+          <DialogContent showCloseButton={false} className="text-center max-w-[340px] p-10 rounded-md">
             <DialogHeader className="items-center">
-              <div className="text-[4rem] leading-none animate-bounce-in">{badgeUnlock.emoji}</div>
-              <Badge variant="secondary" className="text-emerald-600 text-[0.7rem] font-bold uppercase tracking-wider">
+              <div className="text-[3rem] leading-none animate-bounce-in">{badgeUnlock.emoji}</div>
+              <span className="text-xs font-medium text-muted-foreground uppercase tracking-widest">
                 Badge Unlocked
-              </Badge>
-              <DialogTitle className="text-[1.4rem] font-extrabold">{badgeUnlock.name}</DialogTitle>
+              </span>
+              <DialogTitle className="text-xl font-bold">{badgeUnlock.name}</DialogTitle>
             </DialogHeader>
             <Button
               onClick={() => setBadgeUnlock(null)}
-              className="w-full h-14 text-base font-bold rounded-xl bg-primary text-primary-foreground shadow-[0_4px_14px_rgba(139,26,16,0.3)] hover:-translate-y-0.5 hover:bg-primary/90 active:translate-y-0 transition-all"
+              className="w-full h-12 text-sm font-semibold rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
             >
-              Awesome!
+              Continue
             </Button>
           </DialogContent>
         </Dialog>

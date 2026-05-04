@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InteractAgent — Style A: Linear</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #FFFFFF;
+    color: #0A0A0A;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* Top Bar */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid #E5E5E5;
+    position: sticky;
+    top: 0;
+    background: #FFFFFF;
+    z-index: 10;
+  }
+  .topbar-brand {
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: -0.3px;
+  }
+  .topbar-stats {
+    display: flex;
+    gap: 16px;
+    font-size: 13px;
+  }
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .stat-value {
+    font-weight: 600;
+  }
+  .stat-label {
+    color: #6B6B6B;
+  }
+
+  /* Progress Bar */
+  .progress-section {
+    padding: 16px;
+    border-bottom: 1px solid #E5E5E5;
+  }
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #6B6B6B;
+    margin-bottom: 6px;
+  }
+  .progress-bar {
+    height: 4px;
+    background: #E5E5E5;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: #8B1A10;
+    width: 35%;
+    border-radius: 2px;
+  }
+
+  /* Levels */
+  .level {
+    border-top: 1px solid #E5E5E5;
+  }
+  .level-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    cursor: pointer;
+  }
+  .level-header:hover {
+    background: #FAFAFA;
+  }
+  .level-title {
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .level-meta {
+    font-size: 12px;
+    color: #6B6B6B;
+  }
+  .level-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border: 1px solid #E5E5E5;
+    border-radius: 4px;
+    color: #6B6B6B;
+  }
+  .level-badge.active {
+    border-color: #8B1A10;
+    color: #8B1A10;
+  }
+
+  /* Tasks */
+  .tasks {
+    padding: 0 16px 16px;
+  }
+  .task {
+    border-left: 3px solid #E5E5E5;
+    padding: 10px 12px;
+    margin-bottom: 2px;
+    cursor: pointer;
+  }
+  .task:hover {
+    background: #FAFAFA;
+  }
+  .task.completed {
+    border-left-color: #8B1A10;
+  }
+  .task.active {
+    border-left-color: #8B1A10;
+    background: #FAFAFA;
+  }
+  .task-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .task-desc {
+    font-size: 12px;
+    color: #6B6B6B;
+  }
+  .task-status {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  .task-status.done {
+    color: #8B1A10;
+  }
+  .task-status.in-progress {
+    color: #0A0A0A;
+  }
+
+  /* Expanded Task */
+  .task-expanded {
+    border-left: 3px solid #8B1A10;
+    padding: 12px;
+    background: #FAFAFA;
+    margin-bottom: 2px;
+  }
+  .task-expanded .task-title {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  .task-expanded .task-instructions {
+    font-size: 13px;
+    color: #3A3A3A;
+    margin-bottom: 12px;
+  }
+
+  /* Code Block */
+  .code-block {
+    background: #0A0A0A;
+    color: #E5E5E5;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 12px;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin-bottom: 12px;
+    line-height: 1.6;
+  }
+  .code-keyword { color: #FF6B6B; }
+  .code-string { color: #A8E6A1; }
+  .code-comment { color: #6B6B6B; }
+  .code-func { color: #7DB9FF; }
+
+  /* Buttons */
+  .btn {
+    display: inline-block;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+    font-family: 'Inter', sans-serif;
+  }
+  .btn-primary {
+    background: #8B1A10;
+    color: #FFFFFF;
+  }
+  .btn-outline {
+    background: transparent;
+    border: 1px solid #E5E5E5;
+    color: #0A0A0A;
+  }
+  .btn-group {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  /* Collapsed Level */
+  .level-collapsed .level-header {
+    opacity: 0.6;
+  }
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="topbar">
+  <div class="topbar-brand">InteractAgent</div>
+  <div class="topbar-stats">
+    <div class="stat">
+      <span class="stat-value">7</span>
+      <span class="stat-label">day streak</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value">1,240</span>
+      <span class="stat-label">XP</span>
+    </div>
+  </div>
+</div>
+
+<!-- Progress -->
+<div class="progress-section">
+  <div class="progress-header">
+    <span>Course Progress</span>
+    <span>7 / 20 tasks</span>
+  </div>
+  <div class="progress-bar">
+    <div class="progress-fill"></div>
+  </div>
+</div>
+
+<!-- Level 1 — Expanded -->
+<div class="level">
+  <div class="level-header">
+    <div>
+      <div class="level-title">Level 1: Agent Basics</div>
+      <div class="level-meta">Build your first conversational agent</div>
+    </div>
+    <span class="level-badge active">3/4</span>
+  </div>
+  <div class="tasks">
+    <!-- Task 1 — Completed -->
+    <div class="task completed">
+      <div class="task-title">Create a system prompt</div>
+      <div class="task-desc">Define your agent's persona and rules</div>
+      <div class="task-status done">Completed</div>
+    </div>
+
+    <!-- Task 2 — Completed -->
+    <div class="task completed">
+      <div class="task-title">Handle user input</div>
+      <div class="task-desc">Parse messages and extract intent</div>
+      <div class="task-status done">Completed</div>
+    </div>
+
+    <!-- Task 3 — Open / Expanded -->
+    <div class="task-expanded">
+      <div class="task-title">Add tool calling</div>
+      <div class="task-instructions">
+        Connect your agent to an external API using function calling. Register the tool schema and handle the response.
+      </div>
+      <div class="code-block">
+<span class="code-keyword">const</span> tools = [{
+  <span class="code-string">"type"</span>: <span class="code-string">"function"</span>,
+  <span class="code-string">"function"</span>: {
+    <span class="code-string">"name"</span>: <span class="code-string">"get_weather"</span>,
+    <span class="code-string">"parameters"</span>: {
+      <span class="code-string">"type"</span>: <span class="code-string">"object"</span>,
+      <span class="code-string">"properties"</span>: {
+        <span class="code-string">"city"</span>: { <span class="code-string">"type"</span>: <span class="code-string">"string"</span> }
+      }
+    }
+  }
+}];
+
+<span class="code-comment">// Pass tools to the model</span>
+<span class="code-keyword">const</span> response = <span class="code-keyword">await</span> <span class="code-func">chat</span>({
+  messages,
+  tools
+});
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-primary">Submit Solution</button>
+        <button class="btn btn-outline">Show Hint</button>
+      </div>
+    </div>
+
+    <!-- Task 4 — Locked -->
+    <div class="task">
+      <div class="task-title">Multi-turn memory</div>
+      <div class="task-desc">Maintain context across conversation turns</div>
+      <div class="task-status in-progress">Locked</div>
+    </div>
+  </div>
+</div>
+
+<!-- Level 2 — Collapsed -->
+<div class="level level-collapsed">
+  <div class="level-header">
+    <div>
+      <div class="level-title">Level 2: Retrieval & Context</div>
+      <div class="level-meta">Ground your agent with external knowledge</div>
+    </div>
+    <span class="level-badge">0/4</span>
+  </div>
+</div>
+
+<!-- Level 3 — Collapsed -->
+<div class="level level-collapsed">
+  <div class="level-header">
+    <div>
+      <div class="level-title">Level 3: Autonomous Workflows</div>
+      <div class="level-meta">Build agents that plan and execute multi-step tasks</div>
+    </div>
+    <span class="level-badge">0/4</span>
+  </div>
+</div>
+
+</body>
+</html>
