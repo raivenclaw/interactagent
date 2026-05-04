@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InteractAgent — Style B: Notion</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    background: #FAFAFA;
+    color: #37352F;
+    line-height: 1.5;
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+
+  /* Top Bar */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: #FFFFFF;
+    border-bottom: 1px solid #E8E8E5;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .topbar-logo {
+    font-weight: 700;
+    font-size: 16px;
+    color: #37352F;
+  }
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .streak-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #37352F;
+    background: #FFF3E0;
+    padding: 5px 10px;
+    border-radius: 20px;
+  }
+  .streak-pill .icon { font-size: 14px; }
+  .xp-pill {
+    font-size: 13px;
+    font-weight: 700;
+    color: #37352F;
+    background: #E8E8E5;
+    padding: 5px 12px;
+    border-radius: 20px;
+  }
+
+  /* Progress Bar */
+  .progress-section {
+    padding: 16px;
+  }
+  .progress-card {
+    background: #FFFFFF;
+    border-radius: 8px;
+    padding: 14px 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .progress-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .progress-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #9B9A97;
+  }
+  .progress-count {
+    font-size: 13px;
+    font-weight: 700;
+    color: #37352F;
+  }
+  .progress-bar {
+    height: 6px;
+    background: #E8E8E5;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 35%;
+    background: #EB5757;
+    border-radius: 3px;
+  }
+
+  /* Levels as Cards */
+  .levels { padding: 0 16px; }
+  .level-card {
+    background: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .level-header {
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+  .level-header:hover { background: #FAFAFA; }
+  .level-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #37352F;
+  }
+  .level-sub {
+    font-size: 12px;
+    color: #9B9A97;
+    margin-top: 2px;
+  }
+  .level-progress-mini {
+    font-size: 12px;
+    font-weight: 500;
+    color: #9B9A97;
+    background: #F7F6F3;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .level-progress-mini.active {
+    color: #EB5757;
+    background: #FFF0F0;
+  }
+
+  /* Task List */
+  .task-list {
+    padding: 0 16px 14px;
+  }
+  .task-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .task-item:hover { background: #F7F6F3; }
+  .checkbox {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #D3D3D0;
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .checkbox.checked {
+    background: #EB5757;
+    border-color: #EB5757;
+    color: #FFF;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .task-label { flex: 1; }
+  .task-label.done {
+    text-decoration: line-through;
+    color: #9B9A97;
+  }
+  .task-xp {
+    font-size: 11px;
+    font-weight: 500;
+    color: #9B9A97;
+  }
+
+  /* Expanded Task */
+  .task-expanded {
+    background: #F7F6F3;
+    border-radius: 8px;
+    padding: 14px;
+    margin: 4px 8px 8px;
+  }
+  .task-expanded-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .task-expanded-desc {
+    font-size: 13px;
+    color: #5A5A57;
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+  .code-block {
+    background: #F7F6F3;
+    border: 1px solid #E8E8E5;
+    border-radius: 6px;
+    padding: 14px;
+    font-family: 'SFMono-Regular', Menlo, monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    color: #37352F;
+    overflow-x: auto;
+    margin-bottom: 14px;
+  }
+  .code-block .keyword { color: #EB5757; font-weight: 500; }
+  .code-block .string { color: #0B6E4F; }
+  .code-block .comment { color: #9B9A97; font-style: italic; }
+  .code-block .func { color: #6940A5; }
+
+  .btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-primary {
+    background: #EB5757;
+    color: #FFF;
+  }
+  .btn-secondary {
+    background: #FFFFFF;
+    border: 1px solid #E8E8E5;
+    color: #37352F;
+    margin-left: 8px;
+  }
+
+  .level-card.collapsed .task-list { display: none; }
+  .level-card.collapsed .level-header { opacity: 0.8; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="topbar-logo">InteractAgent</span>
+  <div class="topbar-right">
+    <span class="streak-pill"><span class="icon">&#128293;</span> 7 days</span>
+    <span class="xp-pill">1,240 XP</span>
+  </div>
+</div>
+
+<div class="progress-section">
+  <div class="progress-card">
+    <div class="progress-top">
+      <span class="progress-title">Your Progress</span>
+      <span class="progress-count">7 / 20</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+  </div>
+</div>
+
+<div class="levels">
+
+  <!-- Level 1: Expanded -->
+  <div class="level-card">
+    <div class="level-header">
+      <div>
+        <div class="level-title">Level 1 — Agent Fundamentals</div>
+        <div class="level-sub">Build your first conversational agent</div>
+      </div>
+      <span class="level-progress-mini active">3/4</span>
+    </div>
+    <div class="task-list">
+      <div class="task-item">
+        <div class="checkbox checked">&#10003;</div>
+        <span class="task-label done">What is an AI Agent?</span>
+        <span class="task-xp">+50 XP</span>
+      </div>
+      <div class="task-item">
+        <div class="checkbox checked">&#10003;</div>
+        <span class="task-label done">Environment & Tools Setup</span>
+        <span class="task-xp">+75 XP</span>
+      </div>
+
+      <!-- Expanded Task -->
+      <div class="task-expanded">
+        <div class="task-expanded-title">Your First Agent Loop</div>
+        <div class="task-expanded-desc">
+          Build a minimal agent loop that reads user input, calls a tool, and returns a response. This is the core pattern behind every AI agent.
+        </div>
+        <div class="code-block">
+<span class="keyword">def</span> <span class="func">agent_loop</span>(prompt: <span class="func">str</span>) -> <span class="func">str</span>:
+    <span class="comment"># 1. Parse the user intent</span>
+    intent = parse_intent(prompt)
+
+    <span class="comment"># 2. Select and call the right tool</span>
+    result = call_tool(intent.tool, intent.args)
+
+    <span class="comment"># 3. Format and return</span>
+    <span class="keyword">return</span> format_response(result)
+        </div>
+        <button class="btn btn-primary">Submit Solution</button>
+        <button class="btn btn-secondary">Show Hint</button>
+      </div>
+
+      <div class="task-item">
+        <div class="checkbox"></div>
+        <span class="task-label">Adding Memory to Agents</span>
+        <span class="task-xp">+100 XP</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Level 2: Collapsed -->
+  <div class="level-card collapsed">
+    <div class="level-header">
+      <div>
+        <div class="level-title">Level 2 — Tool Use & Function Calling</div>
+        <div class="level-sub">Ground your agent with external knowledge</div>
+      </div>
+      <span class="level-progress-mini">0/4</span>
+    </div>
+    <div class="task-list"></div>
+  </div>
+
+  <!-- Level 3: Collapsed -->
+  <div class="level-card collapsed">
+    <div class="level-header">
+      <div>
+        <div class="level-title">Level 3 — Multi-Agent Systems</div>
+        <div class="level-sub">Coordinate agents that plan and execute</div>
+      </div>
+      <span class="level-progress-mini">0/5</span>
+    </div>
+    <div class="task-list"></div>
+  </div>
+
+  <!-- Level 4: Collapsed -->
+  <div class="level-card collapsed">
+    <div class="level-header">
+      <div>
+        <div class="level-title">Level 4 — Production Deployment</div>
+        <div class="level-sub">Ship reliable agents to production</div>
+      </div>
+      <span class="level-progress-mini">0/4</span>
+    </div>
+    <div class="task-list"></div>
+  </div>
+
+</div>
+
+</body>
+</html>
